@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver">
+		</property>
+		<property name="url" value="jdbc:mysql://localhost:3306/note"></property>
+		<property name="username" value="root"></property>
+		<property name="password" value="root"></property>
+	</bean>
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">
+					org.hibernate.dialect.MySQLDialect
+				</prop>
+				<prop key="show_sql">true</prop>
+			</props>
+		</property>
+		<property name="mappingResources">
+			<list>
+				<value>com/ascent/domain/Note.hbm.xml</value>
+				<value>com/ascent/domain/User.hbm.xml</value>
+				<value>com/ascent/domain/Comment.hbm.xml</value>
+				<value>com/ascent/domain/Department.hbm.xml</value>
+				<value>com/ascent/domain/Authority.hbm.xml</value>
+				<value>com/ascent/domain/Plan.hbm.xml</value>
+				<value>com/ascent/domain/State.hbm.xml</value>
+				<value>com/ascent/domain/Category.hbm.xml</value>
+				<value>com/ascent/domain/Priority.hbm.xml</value></list>
+		</property>
+	</bean>
+
+	<bean id="daoTemplate" abstract="true" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="sessionFactory">
+			<ref local="sessionFactory"></ref>
+		</property>
+	</bean>
+
+	<bean id="serviceTemplate" abstract="true" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="noteDAO">
+			<ref local="noteDAO"></ref>
+		</property>
+		<property name="stateDAO" ref="stateDAO"/>
+	</bean>
+
+	<bean id="actionTemplate" abstract="true"
+		class="com.ascent.struts2.action.BaseAction">
+		<property name="userService">
+			<ref local="userService"></ref>
+		</property>
+		<property name="noteService">
+			<ref local="noteService"></ref>
+		</property>
+		<property name="commentService" ref="commentService"></property>
+		<property name="departmentService" ref="departmentService"></property>
+		<property name="authorityService" ref="authorityService"></property>
+		<property name="stateService" ref="stateService"></property>
+		<property name="planService" ref="planService"></property>
+		<property name="priorityService" ref="priorityService"></property>
+		<property name="categorySerivce" ref="categorySerivce"></property>
+	</bean>
+
+	<bean id="SearchAction" class="com.ascent.struts2.action.SearchAction" parent="actionTemplate" scope="prototype">
+	</bean>
+	
+	<bean id="loginAction" class="com.ascent.struts2.action.LoginAction" parent="actionTemplate" scope="prototype">
+	</bean>
+	
+	<bean id="planChainAction" class="com.ascent.struts2.action.PlanChainAction" parent="actionTemplate" scope="prototype">
+	</bean>
+
+	<bean id="planDAO" class="com.ascent.dao.impl.PlanDAOImpl" parent="daoTemplate"></bean>
+	
+	<bean id="planService" class="com.ascent.service.impl.PlanServiceImpl" abstract="false" lazy-init="default" autowire="default" dependency-check="default">
+		<property name="planDAO" ref="planDAO"/>
+	</bean>
+	
+	<bean id="planAction" class="com.ascent.struts2.action.PlanAction" scope="prototype">
+		<property name="planService" ref="planService"></property>
+	</bean>
+
+	<bean id="priorityDAO" class="com.ascent.dao.impl.PriorityDAOImpl" parent="daoTemplate"></bean>
+	
+	<bean id="priorityService" class="com.ascent.service.impl.PriorityServiceImpl" abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+	<property name="priorityDAO" ref="priorityDAO"/>	
+	</bean>
+	
+	<bean id="categoryDAO" class="com.ascent.dao.impl.CategoryDAOImpl" parent="daoTemplate"></bean>
+	
+	<bean id="categorySerivce" class="com.ascent.service.impl.CategoryServiceImpl" abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+	<property name="categoryDAO" ref="categoryDAO"/>	
+	</bean>
+
+	<bean id="stateDAO" class="com.ascent.dao.impl.StateDAOImpl" parent="daoTemplate"></bean>
+
+	<bean id="stateService" class="com.ascent.service.impl.StateServiceImpl" abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+	<property name="stateDAO" ref="stateDAO"/>	
+	</bean>
+
+	<bean id="commentAction" class="com.ascent.struts2.action.CommentAction"
+		parent="actionTemplate" scope="prototype"></bean>
+
+	<bean id="commentDAO" class="com.ascent.dao.impl.CommentDAOImpl"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="sessionFactory">
+			<ref local="sessionFactory"></ref>
+		</property>
+	</bean>
+
+	<bean id="commentService" class="com.ascent.service.impl.CommentServiceImpl"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="commentDAO">
+			<ref local="commentDAO"></ref>
+		</property>
+	</bean>
+
+	<bean id="departmentDAO" class="com.ascent.dao.impl.DepartmentDAOImpl"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="sessionFactory">
+			<ref local="sessionFactory"></ref>
+		</property>
+	</bean>	
+	
+	<bean id="authorityAction" class="com.ascent.struts2.action.AuthorityAction"
+		parent="actionTemplate" scope="prototype"></bean>
+
+	<bean id="departmentService" class="com.ascent.service.impl.DepartmentServiceImpl"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="departmentDAO">
+			<ref local="departmentDAO" />
+		</property>
+	</bean>
+
+	<bean id="authorityDAO" class="com.ascent.dao.impl.AuthorityDAOImpl"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="sessionFactory">
+			<ref local="sessionFactory"></ref>
+		</property>
+	</bean>
+
+	<bean id="authorityService" class="com.ascent.service.impl.AuthorityServiceImpl"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="authorityDAO">
+			<ref local="authorityDAO"></ref>
+		</property>
+	</bean>
+
+	<bean id="noteAction" class="com.ascent.struts2.action.NoteAction"
+		scope="prototype" parent="actionTemplate">
+	</bean>
+
+	<bean id="noteDAO" class="com.ascent.dao.impl.NoteDAOImpl"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="sessionFactory">
+			<ref local="sessionFactory"></ref>
+		</property>
+	</bean>
+
+	<bean id="noteService" class="com.ascent.service.impl.NoteServiceImpl"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="noteDAO">
+			<ref local="noteDAO"></ref>
+		</property>
+	</bean>
+
+	<bean id="userAction" class="com.ascent.struts2.action.UserAction"
+		scope="prototype">
+		<property name="userService">
+			<ref local="userService"></ref>
+		</property>
+		<property name="noteService">
+			<ref local="noteService"></ref>
+		</property>
+	</bean>
+
+	<bean id="userDAO" class="com.ascent.dao.impl.UserDAOImpl"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="sessionFactory">
+			<ref local="sessionFactory"></ref>
+		</property>
+	</bean>
+	
+	<bean id="UpdateAjax" class="com.ascent.ajax.UpdateAjax" abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="userService">
+			<ref local="userService"></ref>
+		</property>
+		<property name="sessionFactory">
+			<ref local="sessionFactory"></ref>
+		</property>
+	</bean>
+
+	<bean id="userService" class="com.ascent.service.impl.UserServiceImpl"
+		abstract="false" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="userDAO">
+			<ref local="userDAO"></ref>
+		</property>
+	</bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+
+	<bean id="transactionInterceptor"
+		class="org.springframework.transaction.interceptor.TransactionInterceptor">
+		<property name="transactionManager" ref="transactionManager"></property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="find*,get*">PROPAGATION_REQUIRED,readOnly</prop>
+				<prop key="save*,update*,delete*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean
+		class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+		<property name="beanNames">
+			<list>
+				<value>userService</value>
+				<value>noteService</value>
+				<value>commentService</value>
+				<value>departmentService</value>
+				<value>authorityService</value>
+			</list>
+		</property>
+		<property name="interceptorNames">
+			<list>
+				<value>transactionInterceptor</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="springUtils" class="com.ascent.ajax.SpringContextUtils"/>
+</beans>

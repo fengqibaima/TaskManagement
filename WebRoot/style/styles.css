@@ -1,0 +1,35 @@
+	tr.submitButton
+	{
+		align:center;
+	}
+	
+	table
+	{
+		border: 1px solid black;
+		border-collapse:collapse;
+		width:100%;
+	}
+	
+	td, th ,tr
+	{
+		border: 1px solid black;
+		weight: 250px;
+		height: 40px;
+		text-align:left;
+		font-size:14px;
+	}
+	
+	
+	#left_div {
+	float: left;
+	height: 100%;
+	width: 20%;
+	border-right: solid #990 1px;
+	}
+
+	#right_div {
+	float: right;
+	height: 100%;
+	width: 80%;
+	text-align:center
+	}

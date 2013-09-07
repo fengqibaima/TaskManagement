@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+"-//Apache Software Foundation//DTD Struts Congiguration 2.0//EN"
+"http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<package name="ssh" extends="struts-default" namespace="/">
+	
+		<interceptors>
+			<interceptor name="checkLogin" class="com.ascent.interceptor.CheckLoginInterceptor">
+			</interceptor>
+		</interceptors>
+	
+		<action name="*UserAction" class="com.ascent.struts2.action.UserAction" method="{1}">
+			<result name="success">/base/welcome_page.jsp</result>
+			<result name="input">/login.jsp</result>
+			<result name="success_showAll">/user/user_show_all.jsp</result>
+			<result name="success_saveOne">/user/user_show_all.jsp</result>
+			<result name="success_deleteOne">/user/user_show_all.jsp</result>
+			<result name="success_showDetail">/user/user_show_one.jsp</result>
+			<result name="success_showAddNewPage">/user/user_add_new.jsp</result>
+			<result name="success_showEditOnePage">/user/user_edit_one.jsp</result>
+			<result name="success_editOne">/user/user_show_all.jsp</result>
+			<result name="success_logOut">/login.jsp</result>
+			<result name="success_showEditMyselfPage">/user/user_edit_myself.jsp</result>
+			<result name="success_editMyself">/note/note_show_executor.jsp</result>
+			<result name="noLogin">/login.jsp</result>
+		</action>
+		
+		<action name="*NoteAction" class="com.ascent.struts2.action.NoteAction" method="{1}">
+			<result name="input">/login.jsp</result>
+			<result name="success_showOne">/plan/plan_edit_publisher.jsp</result>
+			<result name="success_saveOne">/note/note_show_publisher.jsp</result>
+			<result name="success_deleteOne">/note/note_show_publisher.jsp</result>
+			<result name="success_showAddNewPage">/note/note_add_new.jsp</result>
+			<result name="success_showAllPublished">/note/note_show_publisher.jsp</result>
+			<result name="success_showselectedPublished">/note/note_show_publisher.jsp</result>
+			<result name="success_showAllExecuted">/note/note_show_executor.jsp</result>
+			<result name="success_showselectedExecuted">/note/note_show_executor.jsp</result>
+			<result name="success_showPlanPublisherPage" type="chain">
+                <param name="actionName">PlanChainAction</param>
+                <param name="namespace">/</param>
+            </result>
+			<result name="noLogin">/login.jsp</result>
+		</action>
+		
+		<action name="*CommentAction" class="com.ascent.struts2.action.CommentAction" method="{1}">
+			<result name="success_saveOne_publisher">/note/note_show_publisher.jsp</result>
+			<result name="success_saveOne_executor">/note/note_show_executor.jsp</result>
+			<result name="noLogin">/login.jsp</result>
+		</action>
+		
+		<action name="*AuthorityAction" class="com.ascent.struts2.action.AuthorityAction" method="{1}">
+			<result name="success_showAll">/authority/authority_show_all.jsp</result>
+			<result name="success_saveOne">/authority/authority_show_all.jsp</result>
+			<result name="success_deleteOne">/authority/authority_show_all.jsp</result>
+			<result name="success_showDetail">/authority/authority_show_one.jsp</result>
+			<result name="success_showAddNewPage">/authority/authority_add_new.jsp</result>
+			<result name="noLogin">/login.jsp</result>
+		</action>
+		
+			
+		<action name="*LoginAction" class="com.ascent.struts2.action.LoginAction" method="{1}">
+			<result name="success">/base/welcome_page.jsp</result>
+			<result name="input">/login.jsp</result>
+		</action>
+		
+		<action name="*PlanAction" class="com.ascent.struts2.action.PlanAction" method="{1}">
+			<result name="success_addNew_publisher">/note/note_show_publisher.jsp</result>
+			<result name="success_showEditPage_executor">/plan/plan_edit_executor.jsp</result>
+			<result name="success_edit_publisher">/note/note_show_publisher.jsp</result>
+			<result name="success_edit_executor">/note/note_show_executor.jsp</result>
+			<result name="success_showEditPage_publisher">/plan/plan_edit_publisher.jsp</result>
+			<result name="input">/login.jsp</result>
+		</action>
+		
+		<action name="PlanChainAction" class="com.ascent.struts2.action.PlanChainAction" method="showPlanByPublisherPage">
+			<result name="success">/plan/plan_add_new_publisher.jsp</result>
+			<result name="input">/login.jsp</result>
+		</action>
+		
+		<action name="*SearchAction" class="com.ascent.struts2.action.SearchAction" method="{1}">
+			<result name="success_showModuleExecutor">/note/note_show_executor_addSearch.jsp</result>
+			<result name="success_showModulePublisher">/note/note_show_publisher_addSearch.jsp</result>
+		</action>
+	</package>
+	<constant name="struts.objectFactory.spring.autoWire" value="name"></constant>
+	<constant name="struts.custom.i18n.resources" value="messageResource"/>
+</struts>
